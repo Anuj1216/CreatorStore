@@ -1,15 +1,15 @@
 package com.anuj.creatorstore.entities;
 
+import com.anuj.creatorstore.enums.OrderStatus;
+import com.anuj.creatorstore.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,32 +18,42 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false, name="customer_name")
-    private String customerName;
+    private String orderId;
 
-    @Column(name = "customer_email", nullable = false)
-    private String customerEmail;
+    @ManyToOne
+    private User user;
 
-    @Column(nullable=false)
-    private String status;
-
-    @Column(name="total_price", nullable=false)
-    private BigDecimal totalPrice;
+    private Long sellerId;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    @Column(name="created-at")
-    private LocalDateTime createdAt;
+    @ManyToOne
+    private Address shippingAddress;
 
-    @PrePersist
-    public void prePersist(){
-        this.createdAt = LocalDateTime.now();
-    }
+    @Embedded
+    private PaymentDetails paymentDetails = new PaymentDetails();
+
+    private double totalMrpPrice;
+
+    private Integer totalSellingPrice;
+
+    private Integer discount;
+
+    private OrderStatus orderStatus;
+
+    private int totalItem;
+
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
+    private LocalDateTime orderDate= LocalDateTime.now();
+
+    private LocalDateTime deliveryDate= LocalDateTime.now().plusDays(7);
 }

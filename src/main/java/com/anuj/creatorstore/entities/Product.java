@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,12 +34,36 @@ public class Product {
 
     private String description;
 
-    private String category;
+    private int mrpPrice;
 
     @NotNull(message="Price is required")
     @DecimalMin(value = "0.0", inclusive=false, message="Price must be greater than 0.0")
     @Column(nullable = false)
-    private BigDecimal price;
+    private int sellingPrice;
+
+    private int discountPercent;
+
+    private int quantity;
+
+    private String color;
+
+    private int numRatings;
+
+    @ElementCollection
+    private List<String> images = new ArrayList<>();
+
+    @ManyToOne
+    private Category category;
+
+    @ManyToOne
+    private Seller seller;
+
+    private LocalDateTime createdAt;
+
+    private String sizes;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews= new ArrayList<>();
 
     @NotNull(message="Stock Quantity is required")
     @Min(value = 0, message="Stock cannot be less than 0")

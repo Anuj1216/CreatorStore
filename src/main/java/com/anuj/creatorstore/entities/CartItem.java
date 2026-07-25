@@ -1,41 +1,39 @@
 package com.anuj.creatorstore.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Entity
-@Table(name="order_items")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class OrderItem {
+public class CartItem {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
-    @Column(nullable = false)
-    private Integer quantity;
-
-    private String size;
-
-    @JsonIgnore
     @ManyToOne
-    private Order order;
+    @JsonIgnore
+    private Cart cart;
 
     @ManyToOne
     private Product product;
+
+    private String size;
+
+    private int quantity = 1;
 
     private Integer mrpPrice;
 
     private Integer sellingPrice;
 
     private Long userId;
+
+
+
 
 
 }
